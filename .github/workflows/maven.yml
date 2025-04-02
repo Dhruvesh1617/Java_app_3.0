@@ -37,7 +37,7 @@ jobs:
       - name: Trivy installation
         run: |
             sudo apt-get update -y |
-            sudo apt-get install -y |
+            sudo apt-get install curl -y |
             curl TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | jq -r .tag_name)|
             curl -sSL "https://github.com/aquasecurity/trivy/releases/download/$TRIVY_VERSION/trivy_${TRIVY_VERSION#v}_Linux-64bit.tar.gz" | tar -xzv -C /usr/local/bin trivy |
             rm -rf trivy_${TRIVY_VERSION#v}_Linux-64bit.tar.gz

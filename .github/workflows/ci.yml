@@ -10,9 +10,8 @@ name: github actions CI demo
 
 on:
   push:
-    branches: 
-      - main
-  workflow_dispatch:
+    branches: ["main"]
+
  
 
 jobs:

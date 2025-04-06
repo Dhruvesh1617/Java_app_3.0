@@ -30,7 +30,7 @@ jobs:
       run: mvn compile
 
   security-check:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: compile
     steps:
       - uses: actions/checkout@v4
@@ -40,10 +40,12 @@ jobs:
               wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
               echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
               sudo apt update
-              sudo apt install trivy
+              sudo apt install trivy -y
 
       - name: Run Trivy scan
         run: trivy fs --format table -o report.json .
+      - name: git leaks installation
+        run: sudo apt install gitleaks -y
       - name: git leaks scan
         run: gitleaks detect source . -r gitleak-report.json -f json
    

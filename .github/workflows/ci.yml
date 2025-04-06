@@ -34,37 +34,18 @@ jobs:
     needs: compile
     steps:
       - uses: actions/checkout@v4
-      name: Set up Trivy on GitHub Actions
+        name: Install Trivy
+        run: |
+            sudo apt-get update -y
+            sudo apt-get install -y wget apt-transport-https lsb-release gnupg2 curl
 
-on:
-  push:
-    branches:
-      - main
+            # Set DEBIAN_FRONTEND to noninteractive to avoid prompts
+            export DEBIAN_FRONTEND=noninteractive
 
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Install Trivy
-      run: |
-          sudo apt-get update -y
-          sudo apt-get install -y wget apt-transport-https lsb-release gnupg2 curl
-
-          # Set DEBIAN_FRONTEND to noninteractive to avoid prompts
-          export DEBIAN_FRONTEND=noninteractive
-
-          # Add Trivy's APT repository and install Trivy
-          curl -fsSL https://github.com/aquasecurity/trivy/releases/latest/download/trivy_$(uname -s)_$(uname -m).deb -o trivy.deb
-          sudo dpkg -i trivy.deb
-          sudo rm trivy.deb
-
-          # Verify installation
-          trivy --version
-
+            # Add Trivy's APT repository and install Trivy
+            curl -fsSL https://github.com/aquasecurity/trivy/releases/latest/download/trivy_$(uname -s)_$(uname -m).deb -o trivy.deb
+            sudo dpkg -i trivy.deb
+            sudo rm trivy.deb
 
       - name: Run Trivy scan
         run: trivy fs --format table -o report.json .
